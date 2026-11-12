@@ -1,0 +1,277 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "datasource", "uid": "grafana" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": { "limit": 100, "matchAny": false, "tags": [], "type": "dashboard" },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "RPC method latency, sync velocity, mempool fee pressure, and process health",
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "orange", "value": null },
+              { "color": "green", "value": 0.4 },
+              { "color": "purple", "value": 2 }
+            ]
+          },
+          "unit": "fpm"
+        }
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 0 },
+      "id": 301,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+          "expr": "increase(monero_info_height[10m]) / 10",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Sync / Block Velocity (Blocks/min)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "decimals": 6,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.0005 },
+              { "color": "red", "value": 0.002 }
+            ]
+          },
+          "unit": "ɱ"
+        }
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 0 },
+      "id": 302,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+          "expr": "(monero_transaction_pool_fees_monero / (monero_transaction_pool_transactions > 0)) or vector(0)",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Avg Fee per Mempool TX",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null },
+              { "color": "yellow", "value": 5000 },
+              { "color": "red", "value": 25000 }
+            ]
+          },
+          "unit": "decbytes"
+        }
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 0 },
+      "id": 303,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+          "expr": "(monero_transaction_pool_size_bytes / (monero_transaction_pool_transactions > 0)) or vector(0)",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Avg Mempool TX Size",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 0 },
+      "id": 304,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+          "expr": "clamp_min(monero_info_target_height - monero_info_height, 0)",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Blocks Remaining to Sync",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "line", "fillOpacity": 20, "lineInterpolation": "smooth", "lineWidth": 2, "showPoints": "never" },
+          "unit": "s"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 5 },
+      "id": 305,
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+          "expr": "rate(monero_rpc_seconds_total[5m]) / (rate(monero_rpc_hits_total[5m]) > 0)",
+          "legendFormat": "{{method}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Average RPC Latency per Call by Method",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "bars", "fillOpacity": 60, "lineWidth": 1, "showPoints": "never", "stacking": { "group": "A", "mode": "normal" } },
+          "unit": "ops"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 },
+      "id": 306,
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+          "expr": "rate(monero_rpc_hits_total[5m])",
+          "legendFormat": "{{method}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "RPC Throughput (Requests / sec by Method)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "line", "fillOpacity": 25, "lineInterpolation": "smooth", "lineWidth": 2, "showPoints": "never" },
+          "unit": "decbytes"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 13 },
+      "id": 307,
+      "options": {
+        "legend": { "calcs": ["lastNotNull", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+          "expr": "deriv(monero_info_database_size_bytes[15m]) * 3600",
+          "legendFormat": "DB Growth Rate (/hour)",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "LMDB Database Growth Velocity (Bytes / Hour)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "line", "fillOpacity": 20, "lineInterpolation": "smooth", "lineWidth": 2, "showPoints": "never" },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 13 },
+      "id": 308,
+      "options": {
+        "legend": { "calcs": ["lastNotNull", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+          "expr": "process_open_fds",
+          "legendFormat": "Open File Descriptors ({{job}})",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Open Sockets / File Descriptors",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["monero", "rpc", "mempool", "lmdb"],
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "Monero RPC & Chain Analytics",
+  "uid": "xmr-rpc-chain-analytics",
+  "version": 1
+}
